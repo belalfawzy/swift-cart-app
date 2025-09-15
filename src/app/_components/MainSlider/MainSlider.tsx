@@ -14,7 +14,7 @@ import {Autoplay} from "swiper/modules"
 export default function MainSlider() {
   return (
     <>
-      <div className="w-[80%] mx-auto my-12 flex">
+      <div className="w-[100%] mx-auto my-12 flex">
         <div className="w-3/4">
             <Swiper
               spaceBetween={0}

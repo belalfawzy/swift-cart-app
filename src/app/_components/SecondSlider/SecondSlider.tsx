@@ -6,7 +6,8 @@ import getAllCategories from "@/api/categories.api";
 
 export default async function SecondSlider() {
   
-    const data = await getAllCategories()
+    const categoriesData = await getAllCategories()
+    const data = categoriesData.data
 
   return (
     <>

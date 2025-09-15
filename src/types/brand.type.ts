@@ -1,4 +1,4 @@
-export interface CategoryType {
+export interface BrandType {
   _id: string
   name: string
   slug: string
@@ -7,22 +7,24 @@ export interface CategoryType {
   updatedAt: string
 }
 
-export interface CategoriesResponse {
+export interface BrandsResponse {
   results: number
   metadata: {
     currentPage: number
     numberOfPages: number
     limit: number
+    nextPage: number | null
   }
-  data: CategoryType[]
+  data: BrandType[]
 }
 
-export interface CategoryProductsResponse {
+export interface BrandProductsResponse {
   results: number
   metadata: {
     currentPage: number
     numberOfPages: number
     limit: number
+    nextPage: number | null
   }
   data: ProductType[]
 }
@@ -67,3 +69,5 @@ export interface Brand {
   slug: string
   image: string
 }
+
+
