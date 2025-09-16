@@ -7,6 +7,7 @@ import { Toaster } from "@/components/ui/sonner";
 import "../../node_modules/@fortawesome/fontawesome-free/css/all.min.css";
 import MySessionProvider from "@/mySessionProvider/MySessionProvider";
 import CartContextProvider from "@/context/CartContext";
+import WishlistContextProvider from "@/context/WishlistContext";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -35,11 +36,13 @@ export default function RootLayout({
       >
         <MySessionProvider>
           <CartContextProvider>
-            <Toaster />
+            <WishlistContextProvider>
+              <Toaster />
 
-            <Navbar />
+              <Navbar />
 
-            {children}
+              {children}
+            </WishlistContextProvider>
           </CartContextProvider>
         </MySessionProvider>
       </body>

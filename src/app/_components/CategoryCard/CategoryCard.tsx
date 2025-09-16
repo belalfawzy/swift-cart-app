@@ -1,6 +1,6 @@
 'use client'
 
-import React from 'react'
+import React, { useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { CategoryType } from '@/types/category.type'
@@ -11,9 +11,15 @@ interface CategoryCardProps {
 }
 
 export default function CategoryCard({ category }: CategoryCardProps) {
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleClick = () => {
+    setIsLoading(true);
+  };
+
   return (
-    <Link href={`/categories/${category._id}`}>
-      <Card className="group relative overflow-hidden rounded-3xl border-2 border-gray-100 bg-white shadow-lg transition-all duration-500 hover:border-teal-400 hover:shadow-2xl hover:shadow-teal-200/50 hover:-translate-y-3 hover:scale-105">
+    <Link href={`/categories/${category._id}`} onClick={handleClick}>
+      <Card className={`group relative overflow-hidden rounded-3xl border-2 border-gray-100 bg-white shadow-lg transition-all duration-500 hover:border-teal-400 hover:shadow-2xl hover:shadow-teal-200/50 hover:-translate-y-3 hover:scale-105 ${isLoading ? 'pointer-events-none opacity-75' : ''}`}>
         <div className="relative h-56 w-full">
           {/* Category Image */}
           <Image
@@ -37,8 +43,17 @@ export default function CategoryCard({ category }: CategoryCardProps) {
                 {category.name}
               </h3>
               <div className="flex items-center text-teal-200 text-sm opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 transition-all duration-500 delay-200">
-                <i className="fas fa-arrow-right mr-2"></i>
-                <span className="font-medium">Explore Products</span>
+                {isLoading ? (
+                  <>
+                    <i className="fas fa-spinner fa-spin mr-2"></i>
+                    <span className="font-medium">Loading...</span>
+                  </>
+                ) : (
+                  <>
+                    <i className="fas fa-arrow-right mr-2"></i>
+                    <span className="font-medium">Explore Products</span>
+                  </>
+                )}
               </div>
             </div>
           </div>

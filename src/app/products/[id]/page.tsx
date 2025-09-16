@@ -5,6 +5,7 @@ import relatedProducts from "@/paramsAction/relatedProducts.action";
 import { ProductType } from "@/types/product.type";
 import Image from "next/image";
 import React from "react";
+import WishlistBtn from "@/app/_components/WishlistBtn/WishlistBtn";
 
 export default async function ProductDetails({
   params,
@@ -37,7 +38,12 @@ export default async function ProductDetails({
               <i className="fas fa-star text-yellow-500"></i>
             </span>
           </div>
-          <AddBtn id={data.id} />
+          <div className="flex items-center space-x-4">
+            <div className="flex-1">
+              <AddBtn id={data.id} />
+            </div>
+            <WishlistBtn productId={data.id} className="w-12 h-12" />
+          </div>
         </div>
       </div>
 

@@ -3,6 +3,7 @@ import Link from "next/link";
 import React, { useContext, useState } from "react";
 import { signOut, useSession } from "next-auth/react";
 import { CartContext } from "@/context/CartContext";
+import { WishlistContext } from "@/context/WishlistContext";
 
 // Define prop types
 interface NavLinkProps {
@@ -15,13 +16,16 @@ interface NavLinkProps {
 
 export default function Navbar() {
   const { data: session, status } = useSession();
-  const context = useContext(CartContext);
+  const cartContext = useContext(CartContext);
+  const wishlistContext = useContext(WishlistContext);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isLogoutHovered, setIsLogoutHovered] = useState(false);
 
-  if (!context) throw new Error("CartContext is not available");
+  if (!cartContext) throw new Error("CartContext is not available");
+  if (!wishlistContext) throw new Error("WishlistContext is not available");
 
-  const { numberOfItems } = context;
+  const { numberOfItems } = cartContext;
+  const { numberOfWishlistItems } = wishlistContext;
 
   function handleLogout() {
     signOut({ callbackUrl: "/" });
@@ -69,6 +73,20 @@ export default function Navbar() {
 
           {/* Right Section */}
           <div className="flex items-center space-x-4">
+            {/* Wishlist */}
+            {status === "authenticated" && (
+              <Link href="/wishlist" className="relative">
+                <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center border border-gray-200 hover:border-red-300 transition-all duration-200">
+                  <i className="fa-solid fa-heart text-gray-700 font-semibold text-lg"></i>
+                </div>
+                {numberOfWishlistItems > 0 && (
+                  <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center font-bold">
+                    {numberOfWishlistItems}
+                  </span>
+                )}
+              </Link>
+            )}
+
             {/* Cart */}
             {status === "authenticated" && (
               <Link href="/cart" className="relative">
@@ -157,13 +175,22 @@ export default function Navbar() {
                 </MobileNavLink>
               ))}
               {status === "authenticated" && (
-                <MobileNavLink
-                  href="/cart"
-                  badge={numberOfItems}
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  Shopping Cart
-                </MobileNavLink>
+                <>
+                  <MobileNavLink
+                    href="/wishlist"
+                    badge={numberOfWishlistItems}
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    Wishlist
+                  </MobileNavLink>
+                  <MobileNavLink
+                    href="/cart"
+                    badge={numberOfItems}
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    Shopping Cart
+                  </MobileNavLink>
+                </>
               )}
             </div>
           </div>

@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { CartContext } from "@/context/CartContext";
 import React, { useContext, useState } from "react";
 import { toast } from "sonner";
+import QuantityControls from "../QuantityControls/QuantityControls";
 
 export default function AddBtn({ id }: { id: string }) {
   const context = useContext(CartContext);
@@ -11,7 +12,8 @@ export default function AddBtn({ id }: { id: string }) {
 
   if (!context) throw new Error("CartContext is not available");
 
-  const { numberOfItems, setnumberOfItems } = context;
+  const { numberOfItems, setnumberOfItems, isInCart, refreshCart } = context;
+  const isInCartState = isInCart(id);
 
   async function checkAdd(id: string) {
     setIsLoading(true);
@@ -33,6 +35,7 @@ export default function AddBtn({ id }: { id: string }) {
           },
         });
         setnumberOfItems(numberOfItems + 1);
+        await refreshCart();
       } else {
         toast.error("Failed to add product.", {
           position: "top-center",
@@ -69,6 +72,14 @@ export default function AddBtn({ id }: { id: string }) {
     } finally {
       setIsLoading(false);
     }
+  }
+
+  if (isInCartState) {
+    return (
+      <div className="mt-2">
+        <QuantityControls productId={id} />
+      </div>
+    );
   }
 
   return (

@@ -11,6 +11,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { ProductType } from "@/types/product.type";
 import AddBtn from "../AddBtn/AddBtn";
+import WishlistBtn from "../WishlistBtn/WishlistBtn";
 
 export default function SingleProducts({ product }: { product: ProductType }) {
   return (
@@ -46,7 +47,14 @@ export default function SingleProducts({ product }: { product: ProductType }) {
               </CardFooter>
             </Link>
 
-            <AddBtn id={product.id}/>
+            <div className="px-2 pb-2">
+              <div className="flex justify-between items-center mb-2 gap-2">
+                <div className="flex-1">
+                  <AddBtn id={product.id}/>
+                </div>
+                <WishlistBtn productId={product.id} className="w-12 h-12 flex-shrink-0" />
+              </div>
+            </div>
           </Card>
         </div>
       </div>
