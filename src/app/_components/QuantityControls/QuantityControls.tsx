@@ -2,7 +2,7 @@
 import React, { useContext, useState, useEffect } from "react";
 import { CartContext } from "@/context/CartContext";
 import { Button } from "@/components/ui/button";
-import { toast } from "sonner";
+import { showSuccessToast, showErrorToast } from "@/utils/toast";
 import updateProductQuantity from "@/CartActions/updateProductQuantity.action";
 import removeItem from "@/CartActions/removeItem.action";
 
@@ -27,15 +27,9 @@ export default function QuantityControls({ productId, className = "" }: Quantity
     try {
       await updateProductQuantity(productId, quantity + 1);
       await refreshCart();
-      toast.success("Quantity updated", {
-        position: "top-center",
-        duration: 2000,
-      });
+      showSuccessToast("Quantity updated");
     } catch (error) {
-      toast.error("Failed to update quantity", {
-        position: "top-center",
-        duration: 2000,
-      });
+      showErrorToast("Failed to update quantity");
     } finally {
       setIsLoading(false);
     }
@@ -48,15 +42,9 @@ export default function QuantityControls({ productId, className = "" }: Quantity
       try {
         await removeItem(productId);
         await refreshCart();
-        toast.success("Item removed from cart", {
-          position: "top-center",
-          duration: 2000,
-        });
+        showSuccessToast("Item removed from cart");
       } catch (error) {
-        toast.error("Failed to remove item", {
-          position: "top-center",
-          duration: 2000,
-        });
+        showErrorToast("Failed to remove item");
       } finally {
         setIsLoading(false);
       }
@@ -66,15 +54,9 @@ export default function QuantityControls({ productId, className = "" }: Quantity
       try {
         await updateProductQuantity(productId, quantity - 1);
         await refreshCart();
-        toast.success("Quantity updated", {
-          position: "top-center",
-          duration: 2000,
-        });
+        showSuccessToast("Quantity updated");
       } catch (error) {
-        toast.error("Failed to update quantity", {
-          position: "top-center",
-          duration: 2000,
-        });
+        showErrorToast("Failed to update quantity");
       } finally {
         setIsLoading(false);
       }

@@ -9,7 +9,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { toast } from "sonner";
+import { showSuccessToast, showErrorToast } from "@/utils/toast";
 import { zodResolver } from "@hookform/resolvers/zod";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -40,103 +40,23 @@ export default function Login() {
       });
 
       if (res?.ok) {
-        toast.success(
-          <div className="flex items-center gap-3">
-            <i className="fa-solid fa-check-circle text-teal-600 text-2xl animate-pulse"></i>
-            <div>
-              <strong className="text-base">You&apos;re In!</strong>
-              <p className="text-sm">Welcome back! Let&apos;s go shopping!</p>
-            </div>
-          </div>,
-          {
-            position: "top-center",
-            duration: 6000,
-            style: {
-              background: "var(--success-bg)", /* teal-300 to teal-400 */
-              color: "#1f2937", /* gray-800 */
-              border: "1px solid var(--success-border)", /* teal-200 */
-              borderRadius: "12px",
-              boxShadow: "0 6px 16px rgba(20, 184, 166, 0.3)",
-              fontSize: "16px",
-              padding: "16px",
-            },
-            className: "hover:scale-105 transition-transform duration-200",
-            actionButtonStyle: {
-              background: "var(--success-action-bg) !important", /* teal-500 */
-              color: "white !important",
-              borderRadius: "8px !important",
-              padding: "6px 12px !important",
-              fontSize: "14px !important",
-            },
-          }
-        );
+        showSuccessToast("You're In! Welcome back! Let's go shopping!");
         setTimeout(() => {
           window.location.href = "/";
         }, 1000);
       } else {
-        toast.error(
-          <div className="flex items-center gap-3">
-            <i className="fa-solid fa-exclamation-circle text-red-600 text-2xl animate-pulse"></i>
-            <div>
-              <strong className="text-base">Oops, Try Again!</strong>
-              <p className="text-sm">{res?.error || "Invalid email or password."}</p>
-            </div>
-          </div>,
-          {
-            position: "top-center",
-            duration: 6000,
-            style: {
-              background: "var(--error-bg)", /* red-300 to red-400 */
-              color: "#1f2937", /* gray-800 */
-              border: "1px solid var(--error-border)", /* red-200 */
-              borderRadius: "12px",
-              boxShadow: "0 6px 16px rgba(239, 68, 68, 0.3)",
-              fontSize: "16px",
-              padding: "16px",
-            },
-            className: "hover:scale-105 transition-transform duration-200",
-          }
-        );
+        showErrorToast(`Oops, Try Again! ${res?.error || "Invalid email or password."}`);
       }
     } catch (error: unknown) {
       const errorMessage = error instanceof Error
         ? error.message
         : "An unexpected error occurred.";
-      toast.error(
-        <div className="flex items-center gap-3">
-          <i className="fa-solid fa-exclamation-circle text-red-600 text-2xl animate-pulse"></i>
-          <div>
-            <strong className="text-base">Oops, Try Again!</strong>
-            <p className="text-sm">{errorMessage}</p>
-          </div>
-        </div>,
-        {
-          position: "top-center",
-          duration: 6000,
-          closeButton: true,
-          action: {
-            label: "Try Again",
-            onClick: () => form.reset(),
-          },
-          style: {
-            background: "var(--error-bg)", /* red-300 to red-400 */
-            color: "#1f2937", /* gray-800 */
-            border: "1px solid var(--error-border)", /* red-200 */
-            borderRadius: "12px",
-            boxShadow: "0 6px 16px rgba(239, 68, 68, 0.3)",
-            fontSize: "16px",
-            padding: "16px",
-          },
-          className: "hover:scale-105 transition-transform duration-200",
-          actionButtonStyle: {
-            background: "var(--error-action-bg) !important", /* red-500 */
-            color: "white !important",
-            borderRadius: "8px !important",
-            padding: "6px 12px !important",
-            fontSize: "14px !important",
-          },
-        }
-      );
+      showErrorToast(`Oops, Try Again! ${errorMessage}`, {
+        action: {
+          label: "Try Again",
+          onClick: () => form.reset(),
+        },
+      });
     } finally {
       setIsLoading(false);
     }

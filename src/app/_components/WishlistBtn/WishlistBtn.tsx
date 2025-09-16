@@ -1,7 +1,7 @@
 "use client";
 import React, { useContext, useState } from "react";
 import { WishlistContext } from "@/context/WishlistContext";
-import { toast } from "sonner";
+import { showSuccessToast, showErrorToast } from "@/utils/toast";
 import addToWishlistAction from "@/WishlistActions/addToWishlist.action";
 import removeFromWishlistAction from "@/WishlistActions/removeFromWishlist.action";
 
@@ -26,39 +26,17 @@ export default function WishlistBtn({ productId, className = "" }: WishlistBtnPr
     try {
       if (isInWishlistState) {
         await removeFromWishlistAction(productId);
-        toast.success("Removed from wishlist", {
-          position: "top-center",
-          duration: 3000,
-        });
+        showSuccessToast("Removed from wishlist");
       } else {
         await addToWishlistAction(productId);
-        toast.success("Added to wishlist", {
-          position: "top-center",
-          duration: 3000,
-        });
+        showSuccessToast("Added to wishlist");
       }
       await refreshWishlist();
     } catch (error) {
       if (error instanceof Error && error.message.includes("Login")) {
-        toast.error("Login Required", {
-          position: "top-center",
-          duration: 4000,
-          description: "Please log in to add products to your wishlist.",
-          style: {
-            background: "#f59e0b",
-            color: "white",
-            border: "none",
-            borderRadius: "8px",
-            boxShadow: "0 4px 12px rgba(245, 158, 11, 0.3)",
-            fontSize: "16px",
-            fontWeight: "500",
-          },
-        });
+        showErrorToast("Please log in to add products to your wishlist.");
       } else {
-        toast.error(isInWishlistState ? "Failed to remove from wishlist" : "Failed to add to wishlist", {
-          position: "top-center",
-          duration: 3000,
-        });
+        showErrorToast(isInWishlistState ? "Failed to remove from wishlist" : "Failed to add to wishlist");
       }
       console.error("Error toggling wishlist:", error);
     } finally {

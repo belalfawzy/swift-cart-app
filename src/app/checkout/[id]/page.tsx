@@ -10,17 +10,19 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { toast } from "sonner";
+import { showSuccessToast, showErrorToast } from "@/utils/toast";
 import { zodResolver } from "@hookform/resolvers/zod";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useParams } from "next/navigation";
 import { checkoutSchema, checkoutSchemaType } from "@/schema/checkout.schema";
 import OnlineCheckout from "@/checkoutActions/checkout.action";
+import CashOrder from "@/checkoutActions/cashOrder.action";
 
 export default function Checkout() {
   const { id }: { id: string } = useParams();
   const [paymentMethod, setPaymentMethod] = useState<'visa' | 'cash'>('visa');
+  const [isLoading, setIsLoading] = useState(false);
 
   const form = useForm<checkoutSchemaType>({
     defaultValues: {
@@ -32,34 +34,41 @@ export default function Checkout() {
   });
 
   async function handleCheckout(values: checkoutSchemaType) {
+    setIsLoading(true);
+    
     if (paymentMethod === 'cash') {
-      // معالجة الدفع النقدي (مؤقتًا)
-      toast.success(
-        <div className="flex items-center gap-3">
-          <svg
-            className="w-5 h-5 text-teal-600"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M5 13l4 4L19 7"
-            />
-          </svg>
-          <div>
-            <strong className="text-base font-semibold">Cash Payment Selected!</strong>
-            <p className="text-sm">Your order has been placed successfully.</p>
-          </div>
-        </div>,
-        {
-          position: "top-center",
-          duration: 5000,
+      try {
+        const res = await CashOrder(id, values);
+
+        if (res.status === "success") {
+          showSuccessToast("Cash Order Created Successfully! Your order has been placed and will be delivered soon.", {
+            action: {
+              label: "View Orders",
+              onClick: () => window.location.href = "/allorders",
+            },
+          });
+          
+          // Redirect to orders page after successful cash order
+          setTimeout(() => {
+            window.location.href = "/allorders";
+          }, 2000);
+        } else {
+          throw new Error(res.message || "Failed to create cash order. Please try again.");
         }
-      );
+      } catch (error: unknown) {
+        const errorMessage =
+          error instanceof Error
+            ? error.message
+            : "An unexpected error occurred during cash order creation.";
+        showErrorToast(`Cash Order Failed: ${errorMessage}`, {
+          action: {
+            label: "Try Again",
+            onClick: () => form.reset(),
+          },
+        });
+      } finally {
+        setIsLoading(false);
+      }
       return;
     }
 
@@ -67,36 +76,12 @@ export default function Checkout() {
       const res = await OnlineCheckout(id, "", values);
 
       if (res.status === "success") {
-        toast.success(
-          <div className="flex items-center gap-3">
-            <svg
-              className="w-5 h-5 text-teal-600"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M5 13l4 4L19 7"
-              />
-            </svg>
-            <div>
-              <strong className="text-base font-semibold">Checkout Successful!</strong>
-              <p className="text-sm">Redirecting to payment...</p>
-            </div>
-          </div>,
-          {
-            position: "top-center",
-            duration: 5000,
-            action: {
-              label: "Proceed to Payment",
-              onClick: () => window.location.href = res.session.url,
-            },
-          }
-        );
+        showSuccessToast("Checkout Successful! Redirecting to payment...", {
+          action: {
+            label: "Proceed to Payment",
+            onClick: () => window.location.href = res.session.url,
+          },
+        });
         setTimeout(() => {
           window.location.href = res.session.url;
         }, 1000);
@@ -108,36 +93,14 @@ export default function Checkout() {
         error instanceof Error
           ? error.message
           : "An unexpected error occurred during checkout.";
-      toast.error(
-        <div className="flex items-center gap-3">
-          <svg
-            className="w-5 h-5 text-red-600"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-            />
-          </svg>
-          <div>
-            <strong className="text-base font-semibold">Checkout Failed</strong>
-            <p className="text-sm">{errorMessage}</p>
-          </div>
-        </div>,
-        {
-          position: "top-center",
-          duration: 5000,
-          action: {
-            label: "Try Again",
-            onClick: () => form.reset(),
-          },
-        }
-      );
+      showErrorToast(`Checkout Failed: ${errorMessage}`, {
+        action: {
+          label: "Try Again",
+          onClick: () => form.reset(),
+        },
+      });
+    } finally {
+      setIsLoading(false);
     }
   }
 
@@ -275,9 +238,15 @@ export default function Checkout() {
               
               <Button
                 type="submit"
-                className="w-full bg-gradient-to-r from-teal-500 to-teal-600 text-white font-semibold py-3.5 rounded-xl hover:from-teal-600 hover:to-teal-700 hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-300 focus:ring-4 focus:ring-teal-400 focus:ring-opacity-50 shadow-md shadow-teal-200"
+                disabled={isLoading}
+                className="w-full bg-gradient-to-r from-teal-500 to-teal-600 text-white font-semibold py-3.5 rounded-xl hover:from-teal-600 hover:to-teal-700 hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-300 focus:ring-4 focus:ring-teal-400 focus:ring-opacity-50 shadow-md shadow-teal-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
               >
-                {paymentMethod === 'visa' ? (
+                {isLoading ? (
+                  <>
+                    <div className="w-5 h-5 mr-2 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                    Processing...
+                  </>
+                ) : paymentMethod === 'visa' ? (
                   <>
                     <svg className="w-5 h-5 mr-2 inline" fill="currentColor" viewBox="0 0 24 24">
                       <path d="M20 4H4c-1.11 0-1.99.89-1.99 2L2 18c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zm0 14H4v-6h16v6zm0-10H4V6h16v2z"/>

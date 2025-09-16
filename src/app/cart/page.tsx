@@ -9,7 +9,7 @@ import { CartProductType } from "@/types/cart.type";
 import Image from "next/image";
 import Link from "next/link";
 import React, { useContext, useEffect, useState } from "react";
-import { toast } from "sonner";
+import { showSuccessToast, showErrorToast } from "@/utils/toast";
 
 export default function Cart() {
   const context = useContext(CartContext);
@@ -38,7 +38,7 @@ export default function Cart() {
       }
     } catch (err: unknown) {
       if (err instanceof Error) {
-        toast.error("There is no data here !");
+        showErrorToast("There is no data here!");
         setisLoading(false);
       }
     }
@@ -50,20 +50,14 @@ export default function Cart() {
     const res = await RemoveItemFromCart(id);
     if (res.status === "success") {
       setproducts(res.data.products);
-      toast.success("Product removed successfully ❤️", {
-        position: "top-center",
-        duration: 2000,
-      });
+      showSuccessToast("Product removed successfully ❤️");
       getUserCart();
 
       setnumberOfItems(numberOfItems - count);
       setupdatedisable(false);
       setremoveDisable(false);
     } else {
-      toast.error("Can't remove this product", {
-        position: "top-center",
-        duration: 2000,
-      });
+      showErrorToast("Can't remove this product");
       setremoveDisable(false);
       setupdatedisable(false);
     }
@@ -77,10 +71,7 @@ export default function Cart() {
     const res = await UpdateProductQuantity(id, newCount);
     if (res.status === "success") {
       setproducts(res.data.products);
-      toast("Product quantity updated", {
-        position: "top-center",
-        duration: 2000,
-      });
+      showSuccessToast("Product quantity updated");
       getUserCart();
       if (sign === "+") {
         setnumberOfItems(numberOfItems + 1);
@@ -91,10 +82,7 @@ export default function Cart() {
       setupdateLoading(false);
       setremoveDisable(false);
     } else {
-      toast("Can't update product quantity", {
-        position: "top-center",
-        duration: 2000,
-      });
+      showErrorToast("Can't update product quantity");
       setupdatedisable(false);
       setupdateLoading(false);
       setremoveDisable(false);
@@ -106,10 +94,7 @@ export default function Cart() {
     if (res.message === "success") {
       setproducts([]);
       setnumberOfItems(0);
-      toast.success("Cart cleared successfully", {
-        position: "top-center",
-        duration: 2000,
-      });
+      showSuccessToast("Cart cleared successfully");
     }
   }
 

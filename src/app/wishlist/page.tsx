@@ -6,7 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { toast } from "sonner";
+import { showSuccessToast, showErrorToast, showInfoToast } from "@/utils/toast";
 import removeFromWishlistAction from "@/WishlistActions/removeFromWishlist.action";
 
 export default function WishlistPage() {
@@ -24,15 +24,9 @@ export default function WishlistPage() {
     try {
       await removeFromWishlistAction(productId);
       await refreshWishlist();
-      toast.success("Product removed from wishlist", {
-        position: "top-center",
-        duration: 3000,
-      });
+      showSuccessToast("Product removed from wishlist");
     } catch (error) {
-      toast.error("Failed to remove product from wishlist", {
-        position: "top-center",
-        duration: 3000,
-      });
+      showErrorToast("Failed to remove product from wishlist");
       console.error("Error removing from wishlist:", error);
     } finally {
       setIsLoading(false);
@@ -124,10 +118,7 @@ export default function WishlistPage() {
                   className="w-full bg-teal-500 hover:bg-teal-600 text-white"
                   onClick={() => {
                     // Add to cart functionality can be added here
-                    toast.info("Add to cart functionality coming soon!", {
-                      position: "top-center",
-                      duration: 3000,
-                    });
+                    showInfoToast("Add to cart functionality coming soon!");
                   }}
                 >
                   Add to Cart

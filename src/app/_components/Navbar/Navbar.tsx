@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect, useRef } from "react";
 import { signOut, useSession } from "next-auth/react";
 import { CartContext } from "@/context/CartContext";
 import { WishlistContext } from "@/context/WishlistContext";
@@ -20,6 +20,8 @@ export default function Navbar() {
   const wishlistContext = useContext(WishlistContext);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isLogoutHovered, setIsLogoutHovered] = useState(false);
+  const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
   if (!cartContext) throw new Error("CartContext is not available");
   if (!wishlistContext) throw new Error("WishlistContext is not available");
@@ -30,6 +32,20 @@ export default function Navbar() {
   function handleLogout() {
     signOut({ callbackUrl: "/" });
   }
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsProfileDropdownOpen(false);
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   const navItems = [
     { href: "/", label: "Home" },
@@ -119,19 +135,59 @@ export default function Navbar() {
               </div>
             ) : (
               <div className="flex items-center space-x-4">
-                <Link href="/profile" className="hidden lg:flex items-center space-x-3 bg-gray-100 rounded-full px-4 py-2 border border-gray-200 hover:border-teal-300 transition-all duration-200">
-                  <div className="w-9 h-9 bg-teal-100 rounded-full flex items-center justify-center">
-                    <span className="font-bold text-teal-600">
-                      {session?.user?.name?.charAt(0).toUpperCase() || "U"}
-                    </span>
-                  </div>
-                  <div className="hidden md:block">
-                    <p className="text-sm font-medium text-gray-800">
-                      {session?.user?.name}
-                    </p>
-                    <p className="text-xs text-gray-500 -mt-0.5">Member</p>
-                  </div>
-                </Link>
+                {/* Profile Dropdown */}
+                <div className="relative hidden lg:block" ref={dropdownRef}>
+                  <button
+                    onClick={() => setIsProfileDropdownOpen(!isProfileDropdownOpen)}
+                    className="flex items-center space-x-3 bg-gray-100 rounded-full px-4 py-2 border border-gray-200 hover:border-teal-300 transition-all duration-200"
+                  >
+                    <div className="w-9 h-9 bg-teal-100 rounded-full flex items-center justify-center">
+                      <span className="font-bold text-teal-600">
+                        {session?.user?.name?.charAt(0).toUpperCase() || "U"}
+                      </span>
+                    </div>
+                    <div className="hidden md:block">
+                      <p className="text-sm font-medium text-gray-800">
+                        {session?.user?.name}
+                      </p>
+                      <p className="text-xs text-gray-500 -mt-0.5">Member</p>
+                    </div>
+                    <i className={`fa-solid fa-chevron-down text-xs text-gray-500 transition-transform duration-200 ${isProfileDropdownOpen ? 'rotate-180' : ''}`}></i>
+                  </button>
+
+                  {/* Dropdown Menu */}
+                  {isProfileDropdownOpen && (
+                    <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50">
+                      <Link
+                        href="/allorders"
+                        onClick={() => setIsProfileDropdownOpen(false)}
+                        className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
+                      >
+                        <i className="fa-solid fa-shopping-bag mr-3 text-teal-500"></i>
+                        Your Orders
+                      </Link>
+                      <Link
+                        href="/profile"
+                        onClick={() => setIsProfileDropdownOpen(false)}
+                        className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
+                      >
+                        <i className="fa-solid fa-user mr-3 text-teal-500"></i>
+                        Profile Settings
+                      </Link>
+                      <div className="border-t border-gray-100 my-1"></div>
+                      <button
+                        onClick={() => {
+                          setIsProfileDropdownOpen(false);
+                          handleLogout();
+                        }}
+                        className="flex items-center w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors"
+                      >
+                        <i className="fa-solid fa-sign-out-alt mr-3"></i>
+                        Sign Out
+                      </button>
+                    </div>
+                  )}
+                </div>
                 <div 
                   className="relative flex items-center"
                   onMouseEnter={() => setIsLogoutHovered(true)}
@@ -176,6 +232,12 @@ export default function Navbar() {
               ))}
               {status === "authenticated" && (
                 <>
+                  <MobileNavLink
+                    href="/allorders"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    Your Orders
+                  </MobileNavLink>
                   <MobileNavLink
                     href="/wishlist"
                     badge={numberOfWishlistItems}

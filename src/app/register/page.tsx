@@ -9,7 +9,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { toast } from "sonner";
+import { showSuccessToast, showErrorToast } from "@/utils/toast";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios, { AxiosError } from "axios";
 import React, { useState } from "react";
@@ -44,18 +44,7 @@ async function handleRegister(values: RegisterSchemaType) {
       values
     );
     if (res.data.message === "success") {
-      toast.success(
-        <div className="flex items-center gap-3">
-          <div>
-            <strong className="text-base font-semibold">Account Created!</strong>
-            <p className="text-sm">Welcome! Redirecting to login...</p>
-          </div>
-        </div>,
-        {
-          position: "top-center",
-          duration: 5000,
-        }
-      );
+      showSuccessToast("Account Created! Welcome! Redirecting to login...");
       setTimeout(() => {
         router.push("/login");
       }, 1000);
@@ -65,19 +54,7 @@ async function handleRegister(values: RegisterSchemaType) {
       err instanceof AxiosError
         ? err.response?.data.message || "Failed to register. Please try again."
         : "An unexpected error occurred.";
-    toast.error(
-      <div className="flex items-center gap-3">
-        <i className="fa-solid fa-exclamation-circle text-red-600 text-2xl animate-pulse"></i>
-        <div>
-          <strong className="text-base">Registration Failed</strong>
-          <p className="text-sm">{errorMessage}</p>
-        </div>
-      </div>,
-      {
-        position: "top-center",
-        duration: 5000,
-      }
-    );
+    showErrorToast(`Registration Failed: ${errorMessage}`);
   } finally {
     setIsLoading(false);
   }

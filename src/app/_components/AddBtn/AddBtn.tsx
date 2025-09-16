@@ -3,7 +3,7 @@ import AddToCart from "@/CartActions/addProduct.action";
 import { Button } from "@/components/ui/button";
 import { CartContext } from "@/context/CartContext";
 import React, { useContext, useState } from "react";
-import { toast } from "sonner";
+import { showSuccessToast, showErrorToast } from "@/utils/toast";
 import QuantityControls from "../QuantityControls/QuantityControls";
 
 export default function AddBtn({ id }: { id: string }) {
@@ -20,54 +20,15 @@ export default function AddBtn({ id }: { id: string }) {
     try {
       const res = await AddToCart(id);
       if (res.status === "success") {
-        toast.success("Product added to cart successfully.", {
-          position: "top-center",
-          duration: 3000,
-          description: "You can view your cart or continue shopping.",
-          style: {
-            background: "#14b8a6", /* teal-500 */
-            color: "white",
-            border: "none",
-            borderRadius: "8px",
-            boxShadow: "0 4px 12px rgba(20, 184, 166, 0.3)",
-            fontSize: "16px",
-            fontWeight: "500",
-          },
-        });
+        showSuccessToast("Product added to cart successfully!");
         setnumberOfItems(numberOfItems + 1);
         await refreshCart();
       } else {
-        toast.error("Failed to add product.", {
-          position: "top-center",
-          duration: 3000,
-          description: "An error occurred. Please try again.",
-          style: {
-            background: "#ef4444",
-            color: "white",
-            border: "none",
-            borderRadius: "8px",
-            boxShadow: "0 4px 12px rgba(239, 68, 68, 0.3)",
-            fontSize: "16px",
-            fontWeight: "500",
-          },
-        });
+        showErrorToast("Failed to add product. Please try again.");
       }
     } catch (err: unknown) {
       if (err instanceof Error) {
-        toast.error("Login Required", {
-          position: "top-center",
-          duration: 4000,
-          description: "Please log in to add products to your cart.",
-          style: {
-            background: "#f59e0b",
-            color: "white",
-            border: "none",
-            borderRadius: "8px",
-            boxShadow: "0 4px 12px rgba(245, 158, 11, 0.3)",
-            fontSize: "16px",
-            fontWeight: "500",
-          },
-        });
+        showErrorToast("Please log in to add products to your cart.");
       }
     } finally {
       setIsLoading(false);
