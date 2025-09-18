@@ -1,9 +1,9 @@
 "use server";
-import { getWishlist } from "@/api/wishlist.api";
+import { getLoggedUserWishlist } from "@/api/wishlist.api";
 
 export default async function getWishlistAction() {
   try {
-    const res = await getWishlist();
+    const res = await getLoggedUserWishlist();
     return res;
   } catch (err: unknown) {
     if (err instanceof Error) {

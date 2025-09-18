@@ -1,9 +1,9 @@
 "use server";
-import { addToWishlist } from "@/api/wishlist.api";
+import { addProductToWishlist } from "@/api/wishlist.api";
 
 export default async function addToWishlistAction(productId: string) {
   try {
-    const res = await addToWishlist(productId);
+    const res = await addProductToWishlist(productId);
     return res;
   } catch (err: unknown) {
     if (err instanceof Error) {

@@ -32,6 +32,9 @@ export default function WishlistContextProvider({
 
   // Function to check if product is in wishlist
   const isInWishlist = (productId: string): boolean => {
+    if (!wishlistItems || !Array.isArray(wishlistItems)) {
+      return false;
+    }
     return wishlistItems.some(item => item.id === productId);
   };
 
@@ -39,8 +42,13 @@ export default function WishlistContextProvider({
   const refreshWishlist = async () => {
     try {
       const res = await getWishlistAction();
-      setWishlistItems(res.data);
-      setNumberOfWishlistItems(res.count);
+      if (res && res.data && Array.isArray(res.data)) {
+        setWishlistItems(res.data);
+        setNumberOfWishlistItems(res.count || 0);
+      } else {
+        setWishlistItems([]);
+        setNumberOfWishlistItems(0);
+      }
     } catch (err: unknown) {
       if (err instanceof Error) {
         console.log("Error refreshing wishlist:", err.message);
@@ -54,8 +62,13 @@ export default function WishlistContextProvider({
   async function getUserWishlist() {
     try {
       const res = await getWishlistAction();
-      setWishlistItems(res.data);
-      setNumberOfWishlistItems(res.count);
+      if (res && res.data && Array.isArray(res.data)) {
+        setWishlistItems(res.data);
+        setNumberOfWishlistItems(res.count || 0);
+      } else {
+        setWishlistItems([]);
+        setNumberOfWishlistItems(0);
+      }
     } catch (err: unknown) {
       if (err instanceof Error) {
         console.log("Error getting wishlist:", err.message);

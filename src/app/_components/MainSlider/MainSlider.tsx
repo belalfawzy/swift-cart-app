@@ -1,5 +1,5 @@
 "use client"
-import React from "react";
+import React, { useEffect, useState } from "react";
 import img1 from "../../../../public/images/slider-image-1.jpeg"
 import img2 from "../../../../public/images/slider-image-2.jpeg"
 import img3 from "../../../../public/images/slider-image-3.jpeg"
@@ -12,6 +12,32 @@ import {Autoplay} from "swiper/modules"
 
 
 export default function MainSlider() {
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  if (!isClient) {
+    return (
+      <div className="w-[100%] mx-auto my-12 flex">
+        <div className="w-3/4">
+          <div className="w-full h-[400px] bg-gray-200 animate-pulse rounded-lg flex items-center justify-center">
+            <div className="text-gray-400">Loading...</div>
+          </div>
+        </div>
+        <div className="w-1/4">
+          <div className="w-full h-[200px] bg-gray-200 animate-pulse rounded-lg mb-2 flex items-center justify-center">
+            <div className="text-gray-400 text-sm">Loading...</div>
+          </div>
+          <div className="w-full h-[200px] bg-gray-200 animate-pulse rounded-lg flex items-center justify-center">
+            <div className="text-gray-400 text-sm">Loading...</div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <>
       <div className="w-[100%] mx-auto my-12 flex">

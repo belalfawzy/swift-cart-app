@@ -8,6 +8,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Button } from "@/components/ui/button";
 import { showSuccessToast, showErrorToast, showInfoToast } from "@/utils/toast";
 import removeFromWishlistAction from "@/WishlistActions/removeFromWishlist.action";
+import AddBtn from "../_components/AddBtn/AddBtn";
 
 export default function WishlistPage() {
   const wishlistContext = useContext(WishlistContext);
@@ -66,10 +67,10 @@ export default function WishlistPage() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {wishlistItems.map((item: WishlistData) => (
-            <Card key={item.id} className="group hover:shadow-lg transition-shadow duration-300">
-              <Link href={`/products/${item.id}`}>
+            <Card key={item.id} className="group hover:shadow-lg transition-shadow duration-300 h-full flex flex-col">
+              <Link href={`/products/${item.id}`} className="flex-1 flex flex-col">
                 <CardHeader className="p-0">
                   <div className="relative overflow-hidden rounded-t-lg">
                     <Image
@@ -93,15 +94,18 @@ export default function WishlistPage() {
                     </div>
                   </div>
                 </CardHeader>
-                <CardContent className="p-4">
+                <CardContent className="p-4 flex-1">
                   <CardDescription className="text-teal-500 text-sm mb-2">
                     {item.category.name}
                   </CardDescription>
-                  <CardTitle className="text-lg font-semibold line-clamp-2 mb-2">
+                  <CardTitle className="text-lg font-semibold line-clamp-2 mb-3">
                     {item.title}
                   </CardTitle>
-                  <div className="flex items-center justify-between">
-                    <span className="text-lg font-bold text-gray-800">
+                  <p className="text-gray-600 text-sm line-clamp-2 mb-4">
+                    {item.description}
+                  </p>
+                  <div className="flex items-center justify-between mb-4">
+                    <span className="text-xl font-bold text-gray-800">
                       {item.price} EGP
                     </span>
                     <div className="flex items-center">
@@ -111,18 +115,16 @@ export default function WishlistPage() {
                       </span>
                     </div>
                   </div>
+                  <div className="flex items-center justify-between text-sm text-gray-500">
+                    <span>Brand: {item.brand?.name || 'N/A'}</span>
+                    <span>Stock: {item.quantity || 'Available'}</span>
+                  </div>
                 </CardContent>
               </Link>
-              <CardFooter className="p-4 pt-0">
-                <Button 
-                  className="w-full bg-teal-500 hover:bg-teal-600 text-white"
-                  onClick={() => {
-                    // Add to cart functionality can be added here
-                    showInfoToast("Add to cart functionality coming soon!");
-                  }}
-                >
-                  Add to Cart
-                </Button>
+              <CardFooter className="p-4 pt-0 mt-auto">
+                <div className="w-full">
+                  <AddBtn id={item.id} />
+                </div>
               </CardFooter>
             </Card>
           ))}

@@ -1,8 +1,8 @@
 "use client";
-import React, { useContext, useState, useEffect } from "react";
-import { CartContext } from "@/context/CartContext";
+import React, { useContext, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { showSuccessToast, showErrorToast } from "@/utils/toast";
+import { CartContext } from "@/context/CartContext";
+import { toast } from "sonner";
 import updateProductQuantity from "@/CartActions/updateProductQuantity.action";
 import removeItem from "@/CartActions/removeItem.action";
 
@@ -27,9 +27,15 @@ export default function QuantityControls({ productId, className = "" }: Quantity
     try {
       await updateProductQuantity(productId, quantity + 1);
       await refreshCart();
-      showSuccessToast("Quantity updated");
+      toast.success("Quantity updated", {
+        position: "top-center",
+        duration: 2000,
+      });
     } catch (error) {
-      showErrorToast("Failed to update quantity");
+      toast.error("Failed to update quantity", {
+        position: "top-center",
+        duration: 2000,
+      });
     } finally {
       setIsLoading(false);
     }
@@ -42,9 +48,15 @@ export default function QuantityControls({ productId, className = "" }: Quantity
       try {
         await removeItem(productId);
         await refreshCart();
-        showSuccessToast("Item removed from cart");
+        toast.success("Item removed from cart", {
+          position: "top-center",
+          duration: 2000,
+        });
       } catch (error) {
-        showErrorToast("Failed to remove item");
+        toast.error("Failed to remove item", {
+          position: "top-center",
+          duration: 2000,
+        });
       } finally {
         setIsLoading(false);
       }
@@ -54,43 +66,72 @@ export default function QuantityControls({ productId, className = "" }: Quantity
       try {
         await updateProductQuantity(productId, quantity - 1);
         await refreshCart();
-        showSuccessToast("Quantity updated");
+        toast.success("Quantity updated", {
+          position: "top-center",
+          duration: 2000,
+        });
       } catch (error) {
-        showErrorToast("Failed to update quantity");
+        toast.error("Failed to update quantity", {
+          position: "top-center",
+          duration: 2000,
+        });
       } finally {
         setIsLoading(false);
       }
     }
   };
 
+  const handleRemove = async () => {
+    setIsLoading(true);
+    try {
+      await removeItem(productId);
+      await refreshCart();
+      toast.success("Item removed from cart", {
+        position: "top-center",
+        duration: 2000,
+      });
+    } catch (error) {
+      toast.error("Failed to remove item", {
+        position: "top-center",
+        duration: 2000,
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   if (quantity === 0) {
-    return null; // Don't show controls if item is not in cart
+    return null;
   }
 
   return (
-    <div className={`flex items-center justify-center space-x-2 ${className}`}>
+    <div className={`flex items-center justify-between bg-teal-50 rounded-lg p-1.5 border border-teal-200 ${className}`}>
+      <div className="flex items-center space-x-2">
+        <Button
+          onClick={handleDecrease}
+          disabled={isLoading}
+          className="w-8 h-8 rounded-lg bg-teal-500 hover:bg-teal-600 text-white text-xs font-bold disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 hover:scale-105"
+        >
+          {isLoading ? <i className="fas fa-spinner fa-spin text-xs"></i> : "-"}
+        </Button>
+        <span className="text-xs font-semibold text-teal-700 w-5 text-center">
+          {quantity}
+        </span>
+        <Button
+          onClick={handleIncrease}
+          disabled={isLoading}
+          className="w-8 h-8 rounded-lg bg-teal-500 hover:bg-teal-600 text-white text-xs font-bold disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 hover:scale-105"
+        >
+          {isLoading ? <i className="fas fa-spinner fa-spin text-xs"></i> : "+"}
+        </Button>
+      </div>
       <Button
-        onClick={handleDecrease}
+        onClick={handleRemove}
         disabled={isLoading}
-        size="sm"
-        variant="outline"
-        className="w-8 h-8 p-0 rounded-full hover:bg-red-50 hover:border-red-300"
+        className="w-8 h-8 rounded-lg bg-red-500 hover:bg-red-600 text-white text-xs font-bold disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 hover:scale-105"
+        title="Remove from cart"
       >
-        <i className="fa-solid fa-minus text-xs"></i>
-      </Button>
-      
-      <span className="min-w-[2rem] text-center font-semibold text-gray-700">
-        {quantity}
-      </span>
-      
-      <Button
-        onClick={handleIncrease}
-        disabled={isLoading}
-        size="sm"
-        variant="outline"
-        className="w-8 h-8 p-0 rounded-full hover:bg-green-50 hover:border-green-300"
-      >
-        <i className="fa-solid fa-plus text-xs"></i>
+        {isLoading ? <i className="fas fa-spinner fa-spin text-xs"></i> : <i className="fas fa-trash text-xs"></i>}
       </Button>
     </div>
   );

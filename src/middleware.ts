@@ -16,7 +16,7 @@ export async function middleware(request: NextRequest) {
 
 
   } else {
-    if(request.nextUrl.pathname === "/cart" || request.nextUrl.pathname === "/allorders"){
+    if(request.nextUrl.pathname === "/cart" || request.nextUrl.pathname === "/allorders" || request.nextUrl.pathname === "/profile"){
       return NextResponse.redirect(new URL("/login", request.url));
     }
     else{
@@ -26,5 +26,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/cart", "/allorders", "/login", "/register"],
+  matcher: ["/cart", "/allorders", "/profile", "/login", "/register"],
 };

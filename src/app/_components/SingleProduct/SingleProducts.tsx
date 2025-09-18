@@ -47,12 +47,14 @@ export default function SingleProducts({ product }: { product: ProductType }) {
               </CardFooter>
             </Link>
 
-            <div className="px-2 pb-2">
-              <div className="flex justify-between items-center mb-2 gap-2">
-                <div className="flex-1">
+            <div className="px-1 pb-2 mt-2">
+              <div className="flex items-center gap-2">
+                <div className="w-4/5">
                   <AddBtn id={product.id}/>
                 </div>
-                <WishlistBtn productId={product.id} className="w-12 h-12 flex-shrink-0" />
+                <div className="w-1/5 flex justify-center">
+                  <WishlistBtn productId={product.id} className="w-12 h-12" />
+                </div>
               </div>
             </div>
           </Card>

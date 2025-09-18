@@ -165,6 +165,26 @@ export default function Login() {
               </Button>
             </form>
           </Form>
+
+          <div className="mt-6 text-center space-y-2">
+            <p className="text-sm text-gray-600">
+              Don&apos;t have an account?{" "}
+              <Link
+                href="/register"
+                className="text-teal-600 hover:text-teal-700 font-medium underline"
+              >
+                Sign up
+              </Link>
+            </p>
+            <p className="text-sm text-gray-600">
+              <Link
+                href="/forgot-password"
+                className="text-teal-600 hover:text-teal-700 font-medium underline"
+              >
+                Forgot your password?
+              </Link>
+            </p>
+          </div>
         </CardContent>
       </Card>
     </div>

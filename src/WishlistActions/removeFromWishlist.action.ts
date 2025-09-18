@@ -1,9 +1,9 @@
 "use server";
-import { removeFromWishlist } from "@/api/wishlist.api";
+import { removeProductFromWishlist } from "@/api/wishlist.api";
 
 export default async function removeFromWishlistAction(productId: string) {
   try {
-    const res = await removeFromWishlist(productId);
+    const res = await removeProductFromWishlist(productId);
     return res;
   } catch (err: unknown) {
     if (err instanceof Error) {

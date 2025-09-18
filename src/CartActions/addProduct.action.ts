@@ -16,5 +16,15 @@ export default async function AddToCart(id: string) {
   });
 
   const payload = await res.json();
+  console.log("Add to cart response:", payload);
+  
+  if (!res.ok) {
+    // Check if it's a password change error
+    if (payload.message && payload.message.includes("password")) {
+      throw new Error("PASSWORD_CHANGED");
+    }
+    throw new Error(payload.message || `HTTP error! status: ${res.status}`);
+  }
+  
   return payload;
 }

@@ -91,12 +91,12 @@ export default function CartContextProvider({
     <CartContext.Provider 
       value={{ 
         numberOfItems, 
-        setnumberOfItems, 
-        cartItems, 
-        setCartItems, 
-        isInCart, 
-        getProductQuantity, 
-        refreshCart 
+        setnumberOfItems,
+        cartItems,
+        setCartItems,
+        isInCart,
+        getProductQuantity,
+        refreshCart
       }}
     >
       {children}
