@@ -62,7 +62,7 @@ export default function Navbar() {
           <Link href="/" className="group">
             <div className="flex items-center space-x-3">
               <div className="w-11 h-11 bg-teal-500 rounded-full flex items-center justify-center transform group-hover:scale-105 transition-transform duration-200">
-                <i className="fa-solid fa-bolt text-white text-lg"></i>
+                <i className="fa-solid fa-cart-arrow-down text-white text-lg"></i>
               </div>
               <div>
                 <h1 className="text-xl font-bold text-gray-800 group-hover:text-teal-600 transition-colors">
@@ -174,17 +174,6 @@ export default function Navbar() {
                         <i className="fa-solid fa-user mr-3 text-teal-500"></i>
                         Profile Settings
                       </Link>
-                      <div className="border-t border-gray-100 my-1"></div>
-                      <button
-                        onClick={() => {
-                          setIsProfileDropdownOpen(false);
-                          handleLogout();
-                        }}
-                        className="flex items-center w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors"
-                      >
-                        <i className="fa-solid fa-sign-out-alt mr-3"></i>
-                        Sign Out
-                      </button>
                     </div>
                   )}
                 </div>
