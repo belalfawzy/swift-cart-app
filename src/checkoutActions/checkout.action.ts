@@ -11,11 +11,12 @@ export default async function OnlineCheckout(
   const token = await getMyToken();
   if (!token) throw new Error("Login First");
 
-  // Simple solution: Always use production URL for Stripe redirect
-  const finalUrl = 'https://swiftcartapp.vercel.app/allorders';
+  // Simple solution: Always use production URL for Stripe redirect (without /allorders)
+  const finalUrl = 'https://swiftcartapp.vercel.app';
 
   console.log("Using redirect URL:", finalUrl);
   console.log("NODE_ENV:", process.env.NODE_ENV);
+  console.log("Full API URL:", `https://ecommerce.routemisr.com/api/v1/orders/checkout-session/${cartId}?url=${finalUrl}`);
 
   const res = await fetch(
     `https://ecommerce.routemisr.com/api/v1/orders/checkout-session/${cartId}?url=${finalUrl}`,
@@ -30,5 +31,12 @@ export default async function OnlineCheckout(
   );
 
   const payload = await res.json();
+  
+  // Log the response to see what URL is being returned
+  console.log("API Response:", payload);
+  if (payload.session && payload.session.url) {
+    console.log("Stripe session URL:", payload.session.url);
+  }
+  
   return payload;
 }
