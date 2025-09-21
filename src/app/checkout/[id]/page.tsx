@@ -73,7 +73,16 @@ export default function Checkout() {
     }
 
     try {
-      const res = await OnlineCheckout(id, "", values);
+      // Simple solution: Always use production URL
+      const currentUrl = 'https://swiftcartapp.vercel.app';
+      
+      // Additional safety: ensure URL is correct
+      if (!currentUrl.includes('swiftcartapp.vercel.app')) {
+        console.error("URL is incorrect, forcing correct URL");
+      }
+      
+      console.log("Client-side URL:", currentUrl);
+      const res = await OnlineCheckout(id, currentUrl, values);
 
       if (res.status === "success") {
         showSuccessToast("Checkout Successful! Redirecting to payment...", {
