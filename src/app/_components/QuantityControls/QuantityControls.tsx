@@ -25,7 +25,7 @@ export default function QuantityControls({ productId, className = "" }: Quantity
   const handleIncrease = async () => {
     setIsLoading(true);
     try {
-      await updateProductQuantity(productId, quantity + 1);
+      await updateProductQuantity(productId, (quantity + 1).toString());
       await refreshCart();
       toast.success("Quantity updated", {
         position: "top-center",
@@ -64,7 +64,7 @@ export default function QuantityControls({ productId, className = "" }: Quantity
       // Decrease quantity
       setIsLoading(true);
       try {
-        await updateProductQuantity(productId, quantity - 1);
+        await updateProductQuantity(productId, (quantity - 1).toString());
         await refreshCart();
         toast.success("Quantity updated", {
           position: "top-center",

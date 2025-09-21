@@ -148,7 +148,7 @@ export default function VerifyResetCodePage() {
 
           <div className="mt-6 text-center">
             <p className="text-sm text-gray-600">
-              Didn't receive the code?{" "}
+              Didn&apos;t receive the code?{" "}
               <Link
                 href="/forgot-password"
                 className="text-teal-600 hover:text-teal-700 font-medium underline"

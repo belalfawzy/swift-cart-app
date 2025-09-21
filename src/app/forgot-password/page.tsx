@@ -63,13 +63,13 @@ export default function ForgotPasswordPage() {
               Check Your Email
             </CardTitle>
             <CardDescription className="text-gray-600">
-              We've sent a reset code to your email address. Please check your inbox and enter the code below.
+              We&apos;ve sent a reset code to your email address. Please check your inbox and enter the code below.
             </CardDescription>
           </CardHeader>
           <CardContent className="p-6">
             <div className="text-center space-y-4">
               <p className="text-sm text-gray-600">
-                Didn't receive the email? Check your spam folder or{" "}
+                Didn&apos;t receive the email? Check your spam folder or{" "}
                 <button
                   onClick={() => setEmailSent(false)}
                   className="text-teal-600 hover:text-teal-700 font-medium underline"
@@ -101,7 +101,7 @@ export default function ForgotPasswordPage() {
             Forgot Password?
           </CardTitle>
           <CardDescription className="text-gray-600">
-            No worries! Enter your email address and we'll send you a reset code.
+            No worries! Enter your email address and we&apos;ll send you a reset code.
           </CardDescription>
         </CardHeader>
         <CardContent className="p-6">

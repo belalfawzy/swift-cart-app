@@ -102,7 +102,7 @@ export default function WishlistPage() {
                     {item.title}
                   </CardTitle>
                   <p className="text-gray-600 text-sm line-clamp-2 mb-4">
-                    {item.description}
+                    {item.category.name} • {item.brand.name}
                   </p>
                   <div className="flex items-center justify-between mb-4">
                     <span className="text-xl font-bold text-gray-800">
@@ -117,7 +117,7 @@ export default function WishlistPage() {
                   </div>
                   <div className="flex items-center justify-between text-sm text-gray-500">
                     <span>Brand: {item.brand?.name || 'N/A'}</span>
-                    <span>Stock: {item.quantity || 'Available'}</span>
+                    <span>Rating: {item.ratingsAverage || 'N/A'}</span>
                   </div>
                 </CardContent>
               </Link>

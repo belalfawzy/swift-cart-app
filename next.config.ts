@@ -3,8 +3,22 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
-      new URL("https://ecommerce.routemisr.com/**/**"),
+      {
+        protocol: 'https',
+        hostname: 'ecommerce.routemisr.com',
+        port: '',
+        pathname: '/**',
+      },
     ],
+  },
+  experimental: {
+    optimizePackageImports: ['lucide-react', '@radix-ui/react-slot'],
+  },
+  typescript: {
+    ignoreBuildErrors: false,
+  },
+  eslint: {
+    ignoreDuringBuilds: false,
   },
 };
 

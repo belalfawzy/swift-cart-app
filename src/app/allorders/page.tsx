@@ -5,6 +5,7 @@ import { OrderData, OrderStatus } from "@/types/order.type";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import Image from "next/image";
+import Link from "next/link";
 import { showErrorToast } from "@/utils/toast";
 import getUserOrdersAction from "@/OrderActions/getUserOrders.action";
 
@@ -149,14 +150,14 @@ export default function AllOrdersPage() {
             </div>
             <h1 className="text-3xl font-bold text-gray-800 mb-4">No Orders Yet</h1>
             <p className="text-gray-600 mb-8 max-w-md mx-auto">
-              You haven't placed any orders yet. Start shopping to see your orders here.
+              You haven&apos;t placed any orders yet. Start shopping to see your orders here.
             </p>
-            <a
+            <Link
               href="/products"
               className="inline-flex items-center px-6 py-3 bg-teal-500 text-white font-medium rounded-lg hover:bg-teal-600 transition-colors"
             >
               Start Shopping
-            </a>
+            </Link>
           </div>
         </div>
       </div>
