@@ -56,19 +56,19 @@ export default function Navbar() {
 
   return (
     <nav className="bg-white border-b border-gray-200 sticky top-0 z-50 shadow-sm">
-      <div className="max-w-6xl mx-auto px-6">
-        <div className="flex justify-between items-center py-5">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6">
+        <div className="flex justify-between items-center py-3 sm:py-5">
           {/* Logo */}
           <Link href="/" className="group">
-            <div className="flex items-center space-x-3">
-              <div className="w-11 h-11 bg-teal-500 rounded-full flex items-center justify-center transform group-hover:scale-105 transition-transform duration-200">
-                <i className="fa-solid fa-cart-arrow-down text-white text-lg"></i>
+            <div className="flex items-center space-x-2 sm:space-x-3">
+              <div className="w-8 h-8 sm:w-11 sm:h-11 bg-teal-500 rounded-full flex items-center justify-center transform group-hover:scale-105 transition-transform duration-200">
+                <i className="fa-solid fa-cart-arrow-down text-white text-sm sm:text-lg"></i>
               </div>
               <div>
-                <h1 className="text-xl font-bold text-gray-800 group-hover:text-teal-600 transition-colors">
-                  SwiftCart
+                <h1 className="text-lg sm:text-xl font-bold text-gray-800 group-hover:text-teal-600 transition-colors">
+                  Swift<span className="text-teal-500">Cart</span>
                 </h1>
-                <p className="text-xs text-gray-500 -mt-1">E-commerce Store</p>
+                <p className="text-xs text-gray-500 -mt-1 hidden sm:block">E-commerce Store</p>
               </div>
             </div>
           </Link>
@@ -88,29 +88,29 @@ export default function Navbar() {
           </div>
 
           {/* Right Section */}
-          <div className="flex items-center space-x-4">
-            {/* Wishlist */}
+          <div className="flex items-center space-x-2 sm:space-x-4">
+            {/* Wishlist - Hidden on very small screens, shown on mobile menu */}
             {status === "authenticated" && (
-              <Link href="/wishlist" className="relative">
-                <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center border border-gray-200 hover:border-red-300 transition-all duration-200">
-                  <i className="fa-solid fa-heart text-gray-700 font-semibold text-lg"></i>
+              <Link href="/wishlist" className="relative hidden sm:block">
+                <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gray-100 rounded-full flex items-center justify-center border border-gray-200 hover:border-red-300 transition-all duration-200">
+                  <i className="fa-solid fa-heart text-gray-700 font-semibold text-sm sm:text-lg"></i>
                 </div>
                 {numberOfWishlistItems > 0 && (
-                  <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center font-bold">
+                  <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs w-4 h-4 sm:w-5 sm:h-5 rounded-full flex items-center justify-center font-bold">
                     {numberOfWishlistItems}
                   </span>
                 )}
               </Link>
             )}
 
-            {/* Cart */}
+            {/* Cart - Always visible for authenticated users */}
             {status === "authenticated" && (
               <Link href="/cart" className="relative">
-                <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center border border-gray-200 hover:border-teal-300 transition-all duration-200">
-                  <i className="fa-solid fa-shopping-cart text-gray-700 font-semibold text-lg"></i>
+                <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gray-100 rounded-full flex items-center justify-center border border-gray-200 hover:border-teal-300 transition-all duration-200">
+                  <i className="fa-solid fa-shopping-cart text-gray-700 font-semibold text-sm sm:text-lg"></i>
                 </div>
                 {numberOfItems > 0 && (
-                  <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center font-bold">
+                  <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs w-4 h-4 sm:w-5 sm:h-5 rounded-full flex items-center justify-center font-bold">
                     {numberOfItems}
                   </span>
                 )}
@@ -119,23 +119,25 @@ export default function Navbar() {
 
             {/* Auth Section */}
             {!session ? (
-              <div className="flex items-center space-x-3">
+              <div className="flex items-center space-x-2 sm:space-x-3">
                 <Link
                   href="/login"
-                  className="px-5 py-2 text-gray-700 font-medium hover:text-teal-600 transition-colors"
+                  className="px-3 sm:px-5 py-2 text-gray-700 font-medium hover:text-teal-600 transition-colors text-sm sm:text-base"
                 >
-                  Sign In
+                  <span className="hidden xs:inline">Sign In</span>
+                  <span className="xs:hidden">Login</span>
                 </Link>
                 <Link
                   href="/register"
-                  className="px-6 py-2 bg-teal-500 text-white font-medium rounded-full hover:bg-teal-600 transition-colors shadow-sm"
+                  className="px-4 sm:px-6 py-2 bg-teal-500 text-white font-medium rounded-full hover:bg-teal-600 transition-colors shadow-sm text-sm sm:text-base"
                 >
-                  Get Started
+                  <span className="hidden xs:inline">Get Started</span>
+                  <span className="xs:hidden">Sign Up</span>
                 </Link>
               </div>
             ) : (
-              <div className="flex items-center space-x-4">
-                {/* Profile Dropdown */}
+              <div className="flex items-center space-x-2 sm:space-x-4">
+                {/* Profile Dropdown - Desktop only */}
                 <div className="relative hidden lg:block" ref={dropdownRef}>
                   <button
                     onClick={() => setIsProfileDropdownOpen(!isProfileDropdownOpen)}
@@ -177,8 +179,20 @@ export default function Navbar() {
                     </div>
                   )}
                 </div>
+                {/* Mobile Profile Button */}
+                <div className="lg:hidden">
+                  <button
+                    onClick={handleLogout}
+                    className="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center hover:bg-red-200 transition-colors"
+                    title="Sign Out"
+                  >
+                    <i className="fa-solid fa-sign-out-alt text-red-600 text-sm"></i>
+                  </button>
+                </div>
+                
+                {/* Desktop Logout Button */}
                 <div 
-                  className="relative flex items-center"
+                  className="relative hidden lg:flex items-center"
                   onMouseEnter={() => setIsLogoutHovered(true)}
                   onMouseLeave={() => setIsLogoutHovered(false)}
                 >
@@ -199,13 +213,13 @@ export default function Navbar() {
               </div>
             )}
 
-            {/* Mobile Menu */}
+            {/* Mobile Menu Button */}
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="lg:hidden w-10 h-10 bg-white rounded-full flex items-center justify-center border border-gray-200"
+              className="lg:hidden w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center border border-gray-200 hover:bg-gray-200 transition-colors"
               aria-label="Toggle menu"
             >
-              <i className={`fa-solid ${isMenuOpen ? "fa-xmark" : "fa-bars"} text-gray-700`}></i>
+              <i className={`fa-solid ${isMenuOpen ? "fa-xmark" : "fa-bars"} text-gray-700 text-sm`}></i>
             </button>
           </div>
         </div>
@@ -213,17 +227,39 @@ export default function Navbar() {
         {/* Mobile Menu */}
         {isMenuOpen && (
           <div className="lg:hidden pb-4">
-            <div className="bg-white rounded-2xl p-4 border border-gray-200 mt-2">
+            <div className="bg-white rounded-2xl p-4 border border-gray-200 mt-2 shadow-lg">
+              {/* User Profile Info for Mobile */}
+              {status === "authenticated" && (
+                <div className="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg mb-4">
+                  <div className="w-10 h-10 bg-teal-100 rounded-full flex items-center justify-center">
+                    <span className="font-bold text-teal-600 text-sm">
+                      {session?.user?.name?.charAt(0).toUpperCase() || "U"}
+                    </span>
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-sm font-medium text-gray-800">
+                      {session?.user?.name}
+                    </p>
+                    <p className="text-xs text-gray-500">Welcome back!</p>
+                  </div>
+                </div>
+              )}
+              
+              {/* Navigation Links */}
               {navItems.map((item) => (
                 <MobileNavLink key={item.href} href={item.href} onClick={() => setIsMenuOpen(false)}>
                   {item.label}
                 </MobileNavLink>
               ))}
+              
+              {/* Authenticated User Links */}
               {status === "authenticated" && (
                 <>
+                  <div className="border-t border-gray-200 my-2"></div>
                   <MobileNavLink
                     href="/allorders"
                     onClick={() => setIsMenuOpen(false)}
+                    icon="fa-shopping-bag"
                   >
                     Your Orders
                   </MobileNavLink>
@@ -231,6 +267,7 @@ export default function Navbar() {
                     href="/wishlist"
                     badge={numberOfWishlistItems}
                     onClick={() => setIsMenuOpen(false)}
+                    icon="fa-heart"
                   >
                     Wishlist
                   </MobileNavLink>
@@ -238,8 +275,16 @@ export default function Navbar() {
                     href="/cart"
                     badge={numberOfItems}
                     onClick={() => setIsMenuOpen(false)}
+                    icon="fa-shopping-cart"
                   >
                     Shopping Cart
+                  </MobileNavLink>
+                  <MobileNavLink
+                    href="/profile"
+                    onClick={() => setIsMenuOpen(false)}
+                    icon="fa-user"
+                  >
+                    Profile Settings
                   </MobileNavLink>
                 </>
               )}
@@ -264,14 +309,19 @@ function NavLink({ href, children }: NavLinkProps) {
 }
 
 // Mobile Navigation Links
-function MobileNavLink({ href, children, badge = 0, onClick }: NavLinkProps) {
+function MobileNavLink({ href, children, badge = 0, onClick, icon }: NavLinkProps) {
   return (
     <Link
       href={href}
       onClick={onClick}
       className="flex items-center justify-between py-3 px-2 text-gray-700 hover:text-teal-600 hover:bg-teal-50 rounded-lg transition-all duration-200 border-b border-gray-100 last:border-b-0"
     >
-      <span className="font-medium">{children}</span>
+      <div className="flex items-center space-x-3">
+        {icon && (
+          <i className={`fa-solid ${icon} text-teal-500 w-4`}></i>
+        )}
+        <span className="font-medium">{children}</span>
+      </div>
       {badge > 0 && (
         <span className="bg-teal-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center font-bold">
           {badge}
